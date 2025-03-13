@@ -17,6 +17,8 @@ type ConfigProvider interface {
 	GetBool(path string, defaultValue ...bool) bool
 	// GetDuration get duration type config from application
 	GetDuration(path string, defaultValue ...time.Duration) time.Duration
+
+	GetList(path string, rawVal interface{})
 }
 
 type ConfigFile struct {

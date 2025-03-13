@@ -1,3 +1,24 @@
 [Server]
 ENV = "staging"
 
+[Database]
+Dialect = "postgres"
+LogMode = true
+Separation = true
+MaxOpenConns = 100
+MaxIdleConns = 5
+MaxLifetime = "210m"
+Parameters = [
+  "charset=utf8mb4,utf8",
+  "parseTime=true",
+  "loc=Local"
+]
+
+
+[Database.Primary]
+DBName = "postgres"
+Host = "172.0.0.1"
+Port = 5432
+Username = "postgres"
+Password = "P@55w0rd"
+SSLMode = "disable"

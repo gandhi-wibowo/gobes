@@ -1,7 +1,6 @@
 package main
 
 import (
-	"flag"
 	"gobes/abstraction/config"
 	"gobes/abstraction/logger"
 )
@@ -11,11 +10,7 @@ func main() {
 	log := logger.NewWriter()
 	log.In("main").Info("logger was running")
 
-	// load config
-	configFile := flag.String("c", "", "configuration file without extension. For config.toml then put \" -c config\"")
-	flag.Parse()
-
-	cfg := config.NewViperConfig(config.Convert(*configFile))
+	cfg := config.NewViperConfig(nil)
 	if cfg == nil {
 		log.In("main").Error("viper config not loaded")
 	}

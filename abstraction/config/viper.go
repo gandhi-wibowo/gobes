@@ -1,6 +1,7 @@
 package config
 
 import (
+	"flag"
 	"gobes/abstraction/support/convert"
 	"sync"
 	"time"
@@ -21,8 +22,16 @@ type ViperConfig struct {
 // Ensure Viper implements Config
 var _ ConfigProvider = (*ViperConfig)(nil)
 
-func NewViperConfig(configFile ConfigFile) *ViperConfig {
+func NewViperConfig(configFile *ConfigFile) *ViperConfig {
 	once.Do(func() {
+		if configFile == nil {
+			// load default config, running from command
+			configFileFromCommand := flag.String("c", "", "configuration file without extension. For config.toml then put \" -c config\"")
+			flag.Parse()
+			commandToConfigFile := Convert(*configFileFromCommand)
+			configFile = &commandToConfigFile
+		}
+
 		vip := viper.New()
 
 		vip.SetConfigName(configFile.Name)
@@ -89,4 +98,12 @@ func (app *ViperConfig) GetDuration(path string, defaultValue ...time.Duration) 
 		return convert.Default(defaultValue...)
 	}
 	return app.vip.GetDuration(path)
+}
+
+// GetList get list type config
+func (app *ViperConfig) GetList(path string, rawVal interface{}) {
+	if !app.vip.IsSet(path) {
+		rawVal = nil
+	}
+	app.vip.UnmarshalKey(path, rawVal)
 }
